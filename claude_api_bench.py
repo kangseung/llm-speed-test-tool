@@ -53,7 +53,7 @@ MATPLOTLIB_IMPORT_ERROR = None
 # ─── Constants ──────────────────────────────────────────────────────────────
 
 DEFAULT_ROUNDS = 3
-DEFAULT_CONFIG_PATH = os.path.expanduser("~/.claude/settings.json")
+DEFAULT_CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example_config.json")
 
 # Preset test prompt suites
 TEST_SUITES = {
@@ -1199,7 +1199,7 @@ Examples:
     )
 
     parser.add_argument("--config", "-c", default=DEFAULT_CONFIG_PATH,
-                        help="Config file path (default: ~/.claude/settings.json)")
+                        help="Config file path (default: ./example_config.json)")
     parser.add_argument("--rounds", "-r", type=int, default=DEFAULT_ROUNDS,
                         help="Test rounds per prompt type (default: 3)")
     parser.add_argument("--no-warmup", action="store_true",

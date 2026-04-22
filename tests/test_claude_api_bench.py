@@ -39,6 +39,10 @@ def make_prompt_stats(name: str = "short") -> bench.PromptStats:
 
 
 class ConfigTests(unittest.TestCase):
+    def test_default_config_path_points_to_example_config(self):
+        self.assertTrue(bench.DEFAULT_CONFIG_PATH.endswith("example_config.json"))
+        self.assertTrue(os.path.isabs(bench.DEFAULT_CONFIG_PATH))
+
     def test_resolve_path_expands_user(self):
         resolved = bench.resolve_path("~/claude-bench.json")
         self.assertFalse(resolved.startswith("~"))

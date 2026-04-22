@@ -6,7 +6,7 @@ Claude Code Benchmark Tool - benchmark Anthropic or Claude Code compatible endpo
 
 - **Multi-config batch testing**: Test multiple API configurations from JSON
 - **Interactive config input**: Input config information interactively
-- **Claude Code config support**: Read `~/.claude/settings.json` directly
+- **Project-local default config**: Read `./example_config.json` by default
 - **Detailed statistics**:
   - TTFB (Time To First Token)
   - TPS (Tokens Per Second)
@@ -34,7 +34,7 @@ pip install anthropic colorama matplotlib
 python claude_api_bench.py
 ```
 
-Uses default config `~/.claude/settings.json`, 3 rounds default.
+Uses default config `./example_config.json`, 3 rounds default.
 
 ### 2. JSON Config File
 
@@ -169,7 +169,7 @@ The wrapper scripts `full-test.sh`, `chart-test.sh`, and `all-in-one.sh` write t
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `-c, --config` | Config file path | `~/.claude/settings.json` |
+| `-c, --config` | Config file path | `./example_config.json` |
 | `-r, --rounds` | Test rounds per prompt | 3 |
 | `--no-warmup` | Skip warmup | false |
 | `-i, --interactive` | Interactive config input | false |
