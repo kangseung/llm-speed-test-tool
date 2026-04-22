@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Qwen3-Coder-Next",
+    "base_url": "http://192.168.2.54:30001",
+    "auth_token": "sk-placeholder",
+    "model": "Qwen3-Coder-Next"
+  }
+]
