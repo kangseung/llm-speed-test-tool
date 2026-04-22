@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Anthropic Cloud",
+    "base_url": "https://api.anthropic.com",
+    "auth_token": "YOUR_API_KEY_HERE",
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "name": "Claude Code Proxy",
+    "base_url": "https://your-proxy.example.com",
+    "auth_token": "YOUR_AUTH_TOKEN_HERE",
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "name": "Anthropic-Compatible Gateway",
+    "base_url": "https://gateway.example.com",
+    "auth_token": "YOUR_GATEWAY_TOKEN_HERE",
+    "model": "claude-sonnet-4-20250514"
+  }
+]
