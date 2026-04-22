@@ -9,6 +9,7 @@ Features:
 """
 
 import argparse
+import ast
 import json
 import math
 import os
@@ -268,6 +269,42 @@ def shorten_text(text: str, max_len: int) -> str:
     return text[:max_len - 3] + "..."
 
 
+def format_api_error(error: Exception) -> str:
+    """Format provider errors into concise, human-readable messages."""
+    message = str(error).strip()
+    parsed = None
+
+    for parser in (json.loads, ast.literal_eval):
+        try:
+            candidate = parser(message)
+        except (ValueError, SyntaxError, TypeError):
+            continue
+        if isinstance(candidate, dict):
+            parsed = candidate
+            break
+
+    if isinstance(parsed, dict):
+        error_info = parsed.get("error", {})
+        if isinstance(error_info, dict):
+            code = error_info.get("code")
+            detail = error_info.get("message") or message
+            request_id = parsed.get("request_id")
+
+            if code == "1302" or "速率限制" in detail or "rate limit" in detail.lower():
+                formatted = f"Rate limit exceeded ({code}): {detail}" if code else f"Rate limit exceeded: {detail}"
+            else:
+                formatted = f"API error ({code}): {detail}" if code else f"API error: {detail}"
+
+            if request_id:
+                formatted += f" [request_id: {request_id}]"
+            return formatted
+
+    lowered = message.lower()
+    if "rate limit" in lowered:
+        return f"Rate limit exceeded: {message}"
+    return f"Unknown error: {message}" if message else "Unknown error"
+
+
 def ensure_matplotlib() -> bool:
     """Import matplotlib lazily so non-chart commands stay quiet and fast."""
     global plt, MATPLOTLIB_IMPORT_ERROR
@@ -459,7 +496,7 @@ def create_client(config: APIConfig):
     if not config.is_complete():
         raise ValueError("Config is incomplete: base_url, token, and model are required")
     if not HAS_ANTHROPIC:
-        raise ImportError("anthropic module is not installed")
+        raise ImportError("anthropic module is not installed. Install it with: python -m pip install anthropic")
 
     kwargs = {
         "base_url": config.base_url,
@@ -542,7 +579,7 @@ def run_single_test(client, model: str, prompt_text: str, prompt_name: str, max_
     except anthropic.APITimeoutError:
         result.error = "Request timeout"
     except Exception as e:
-        result.error = f"Unknown error: {e}"
+        result.error = format_api_error(e)
 
     return result
 
@@ -1300,4 +1337,8 @@ Examples:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print(f"\n  {Fore.YELLOW}⚠ Benchmark interrupted by user{Style.RESET_ALL}")
+        sys.exit(130)
